@@ -1,0 +1,178 @@
+{
+  "bounded_queue": {
+    "bounded_by_worker_count": true,
+    "contexts_released": true,
+    "fingerprints_produced": 288,
+    "frame_count": 288,
+    "max_inflight_jobs_observed": 4,
+    "pool_created": true,
+    "tiles_produced": 36,
+    "worker_count": 4
+  },
+  "contact_sheet": {
+    "output_identical": true,
+    "parallel": {
+      "cpu_seconds": 0.1077,
+      "cpu_utilization_percent": 205.3,
+      "trials": [
+        {
+          "cpu_seconds": 0.1087,
+          "cpu_utilization_percent": 167.4,
+          "label": "sheet-parallel-0",
+          "wall_seconds": 0.0649
+        },
+        {
+          "cpu_seconds": 0.1064,
+          "cpu_utilization_percent": 202.7,
+          "label": "sheet-parallel-1",
+          "wall_seconds": 0.0525
+        },
+        {
+          "cpu_seconds": 0.1077,
+          "cpu_utilization_percent": 207.1,
+          "label": "sheet-parallel-2",
+          "wall_seconds": 0.052
+        }
+      ],
+      "wall_seconds": 0.0525
+    },
+    "ppm_digest": "6d4e3234b90ae6282e72b75c761f456d687638496a8c095147fa9d8a042e767a",
+    "serial": {
+      "cpu_seconds": 0.0731,
+      "cpu_utilization_percent": 92.5,
+      "trials": [
+        {
+          "cpu_seconds": 0.0731,
+          "cpu_utilization_percent": 93.4,
+          "label": "sheet-serial-0",
+          "wall_seconds": 0.0783
+        },
+        {
+          "cpu_seconds": 0.0737,
+          "cpu_utilization_percent": 93.3,
+          "label": "sheet-serial-1",
+          "wall_seconds": 0.079
+        },
+        {
+          "cpu_seconds": 0.0727,
+          "cpu_utilization_percent": 91.9,
+          "label": "sheet-serial-2",
+          "wall_seconds": 0.0791
+        }
+      ],
+      "wall_seconds": 0.079
+    },
+    "speedup": 1.505,
+    "workload": {
+      "columns": 6,
+      "scenes": 36,
+      "tile_height": 54,
+      "tile_width": 96
+    }
+  },
+  "contact_sheet_failure": {
+    "contexts_released": true,
+    "error_code": "frame_decode_failed",
+    "http_status": 422,
+    "leftover_worker_processes": 0
+  },
+  "environment": {
+    "configured_worker_count": 4,
+    "multiprocessing_start_method": "fork",
+    "python": "3.11.2",
+    "visible_cpus": 4
+  },
+  "failure_cleanup": {
+    "contexts_released": true,
+    "http": {
+      "rejected_clip_visible": false,
+      "truncated_upload_error": "media_bounds_exceeded",
+      "truncated_upload_status": 422
+    },
+    "leftover_worker_processes": 0,
+    "worker_error_code": "media_bounds_exceeded",
+    "worker_http_status": 422
+  },
+  "fingerprints": {
+    "output_identical": true,
+    "parallel": {
+      "cpu_seconds": 0.8534,
+      "cpu_utilization_percent": 327.2,
+      "trials": [
+        {
+          "cpu_seconds": 0.8513,
+          "cpu_utilization_percent": 336.5,
+          "label": "fingerprint-parallel-0",
+          "wall_seconds": 0.253
+        },
+        {
+          "cpu_seconds": 0.8534,
+          "cpu_utilization_percent": 312.2,
+          "label": "fingerprint-parallel-1",
+          "wall_seconds": 0.2734
+        },
+        {
+          "cpu_seconds": 0.8562,
+          "cpu_utilization_percent": 328.3,
+          "label": "fingerprint-parallel-2",
+          "wall_seconds": 0.2608
+        }
+      ],
+      "wall_seconds": 0.2608
+    },
+    "serial": {
+      "cpu_seconds": 0.7946,
+      "cpu_utilization_percent": 99.9,
+      "trials": [
+        {
+          "cpu_seconds": 0.795,
+          "cpu_utilization_percent": 100.0,
+          "label": "fingerprint-serial-0",
+          "wall_seconds": 0.7951
+        },
+        {
+          "cpu_seconds": 0.781,
+          "cpu_utilization_percent": 99.9,
+          "label": "fingerprint-serial-1",
+          "wall_seconds": 0.782
+        },
+        {
+          "cpu_seconds": 0.7946,
+          "cpu_utilization_percent": 99.7,
+          "label": "fingerprint-serial-2",
+          "wall_seconds": 0.7966
+        }
+      ],
+      "wall_seconds": 0.7951
+    },
+    "speedup": 3.048,
+    "workload": {
+      "frame_rgb_bytes": 172800,
+      "frames": 288
+    }
+  },
+  "http_scan_failure": {
+    "error_code": "frame_decode_failed",
+    "http_status": 422,
+    "leftover_worker_processes": 0,
+    "record_error_code": "frame_decode_failed",
+    "record_state": "failed"
+  },
+  "material": {
+    "frame_count": 288,
+    "height": 180,
+    "media_bytes": 49768928,
+    "media_sha256": "458f8ad20bbe3ee05c94fdc4fa4c6b5809e3a18a786a6ba9dc0ade4537ab4dc1",
+    "scene_count": 36,
+    "trials_per_mode": 3,
+    "width": 320
+  },
+  "memory_bound": {
+    "bound_independent_of_frame_and_scene_count": true,
+    "frames_in_clip": 288,
+    "peak_concurrent_decoded_bytes_bound": 691200,
+    "per_frame_rgb_bytes": 172800,
+    "scenes_in_clip": 36,
+    "worker_count": 4
+  }
+}

@@ -11,7 +11,7 @@ from frame_proxy.domain.policies import ContactSheetRequest, validate_identifier
 from frame_proxy.domain.transitions import transition_contact_sheet
 from frame_proxy.media.avi import probe_avi
 from frame_proxy.media.contact import compose_grid, plan_grid
-from frame_proxy.media.frames import Frame, decode_frame_at
+from frame_proxy.media.parallel import available_worker_count, resize_frames
 from frame_proxy.media.ppm import parse_ppm_header
 from frame_proxy.storage.repository import FileRepository
 
@@ -20,6 +20,7 @@ class ContactSheetService:
     def __init__(self, repository: FileRepository, settings: Settings) -> None:
         self._repository = repository
         self._settings = settings
+        self._worker_count = available_worker_count(settings.media_workers)
 
     def create(
         self,
@@ -67,7 +68,7 @@ class ContactSheetService:
         try:
             media = self._repository.get_clip_media(clip.clip_id)
             descriptor = probe_avi(media)
-            frames: dict[int, Frame] = {}
+            selected_frames: set[int] = set()
             for scene in inspection.scenes:
                 if request.selection == "first":
                     frame_index = scene.start_frame
@@ -77,15 +78,23 @@ class ContactSheetService:
                     ) // 2
                 else:
                     frame_index = scene.representative_frame
-                frames[frame_index] = decode_frame_at(
-                    media,
-                    descriptor,
-                    frame_index,
-                )
+                selected_frames.add(frame_index)
+            # Only the selected frames are ever decoded; the parallel runner
+            # keeps at most one in-flight RGB frame per worker.
+            tiles = resize_frames(
+                (
+                    (frame_index, plan.tile_width, plan.tile_height)
+                    for frame_index in sorted(selected_frames)
+                ),
+                media=media,
+                descriptor=descriptor,
+                max_workers=self._worker_count,
+                min_parallel_items=self._settings.media_min_parallel_items,
+            )
             result = compose_grid(
                 plan=plan,
                 scenes=tuple(inspection.scenes),
-                frames=frames,
+                tiles=tiles,
                 background_rgb=request.background_rgb,
                 selection=request.selection,
             )

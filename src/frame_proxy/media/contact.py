@@ -3,12 +3,15 @@ from __future__ import annotations
 import hashlib
 import math
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
 from frame_proxy.domain.errors import ErrorCode, ValidationError
 from frame_proxy.domain.models import SceneRecord
 from frame_proxy.domain.policies import ContactSheetRequest
-from frame_proxy.media.frames import Frame
 from frame_proxy.media.ppm import encode_ppm
+
+if TYPE_CHECKING:
+    from frame_proxy.media.frames import Frame
 
 
 @dataclass(frozen=True, slots=True)
@@ -85,7 +88,7 @@ def plan_grid(
     )
 
 
-def _resize_nearest(frame: Frame, width: int, height: int) -> bytes:
+def resize_tile(frame: "Frame", width: int, height: int) -> bytes:
     output = bytearray(width * height * 3)
     destination = 0
     for y in range(height):
@@ -129,7 +132,7 @@ def compose_grid(
     *,
     plan: GridPlan,
     scenes: tuple[SceneRecord, ...],
-    frames: dict[int, Frame],
+    tiles: dict[int, bytes],
     background_rgb: tuple[int, int, int],
     selection: str,
 ) -> GridResult:
@@ -142,10 +145,9 @@ def compose_grid(
         row = tile_index // plan.columns
         column = tile_index % plan.columns
         source_frame = _selected_frame(scene, selection)
-        frame = frames.get(source_frame)
-        if frame is None:
+        tile = tiles.get(source_frame)
+        if tile is None:
             raise ValueError(f"selected frame {source_frame} was not decoded")
-        tile = _resize_nearest(frame, plan.tile_width, plan.tile_height)
         left = plan.gutter + column * (plan.tile_width + plan.gutter)
         top = plan.gutter + row * (plan.tile_height + plan.gutter)
         _copy_tile(

@@ -17,8 +17,10 @@ from frame_proxy.domain.policies import (
 from frame_proxy.domain.transitions import transition_inspection
 from frame_proxy.media.avi import probe_avi
 from frame_proxy.media.detector import analyze_frames
-from frame_proxy.media.fingerprint import fingerprint_frame
-from frame_proxy.media.frames import decode_frame_at
+from frame_proxy.media.parallel import (
+    available_worker_count,
+    fingerprint_frames,
+)
 from frame_proxy.storage.repository import FileRepository
 
 
@@ -26,6 +28,7 @@ class InspectionService:
     def __init__(self, repository: FileRepository, settings: Settings) -> None:
         self._repository = repository
         self._settings = settings
+        self._worker_count = available_worker_count(settings.media_workers)
 
     def create(
         self,
@@ -63,9 +66,12 @@ class InspectionService:
             sampled_frames = tuple(
                 range(0, descriptor.frame_count, request.sample_stride)
             )
-            fingerprints = tuple(
-                fingerprint_frame(decode_frame_at(media, descriptor, frame_index))
-                for frame_index in sampled_frames
+            fingerprints = fingerprint_frames(
+                sampled_frames,
+                media=media,
+                descriptor=descriptor,
+                max_workers=self._worker_count,
+                min_parallel_items=self._settings.media_min_parallel_items,
             )
             result = analyze_frames(
                 descriptor.frame_count,
